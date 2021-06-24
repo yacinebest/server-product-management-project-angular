@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from "../../../services/user.service";
+import { User } from "../../../model/user";
+import { Role } from "../../../model/role";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-template',
@@ -6,10 +10,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-template.component.css']
 })
 export class UserTemplateComponent implements OnInit {
+  currentUser: User | null = new User();
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) {
+    this.userService.currentUser.subscribe(data => {
+      this.currentUser = data;
+    });
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+
+  logOut() {
+    this.userService.logOut().subscribe(data => {
+      this.router.navigate(['/login']);
+    });
+  }
+
+  get isAdmin() {
+    return this.currentUser && this.currentUser.role === Role.ADMIN;
   }
 
 }

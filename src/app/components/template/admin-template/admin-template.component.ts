@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../services/user.service';
+import { Router } from '@angular/router';
+import { User } from "../../../model/user";
 
 @Component({
   selector: 'app-admin-template',
@@ -6,10 +9,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-template.component.css']
 })
 export class AdminTemplateComponent implements OnInit {
+  currentUser: User | null = new User();
 
-  constructor() { }
+  constructor(private userService: UserService, public router: Router) {
+    this.userService.currentUser.subscribe(data => {
+      this.currentUser = data;
+    });
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+
+  logOut() {
+    this.userService.logOut().subscribe(data => {
+      this.router.navigate(['/login']);
+    });
   }
 
 }
